@@ -1,0 +1,54 @@
+CREATE DATABASE OnlineRechargePortal
+
+USE OnlineRechargePortal
+
+CREATE TABLE user_details(user_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,full_name varchar(40) NOT NULL,email varchar(80) UNIQUE NOT NULL,mobileno varchar(10) UNIQUE NOT NULL,username varchar(12) UNIQUE NOT NULL,password varchar(12) NOT NULL)
+
+CREATE TABLE operator_details(operator_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,operator_name varchar(40) UNIQUE,company_name varchar(40));
+
+CREATE TABLE recharge_plan_details (
+  plan_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  operator_id INT NOT NULL,
+  plan_details VARCHAR(100) NOT NULL,
+  plan_validity VARCHAR(40) NOT NULL,
+  price DECIMAL(10, 2) UNIQUE NOT NULL,
+  CONSTRAINT FK_operator_details1 FOREIGN KEY (operator_id) REFERENCES operator_details(operator_id)
+);
+
+
+CREATE TABLE mobileno_details(mobile_no varchar(10) PRIMARY KEY,operator_id int NOT NULL,owner_name varchar(20) NOT NULL,CONSTRAINT FK_operator_details FOREIGN KEY (operator_id) REFERENCES operator_details(operator_id));
+
+CREATE TABLE mobile_recharge (
+  transaction_id INT PRIMARY KEY AUTO_INCREMENT,
+  operator_id INT NOT NULL,
+  mobile_no VARCHAR(10) NOT NULL,
+  plan_id INT,
+  amount DECIMAL(10, 2) NOT NULL,
+  CONSTRAINT FK_operator_details2 FOREIGN KEY (operator_id) REFERENCES operator_details(operator_id),
+  CONSTRAINT FK_mobileno_details FOREIGN KEY (mobile_no) REFERENCES mobileno_details(mobile_no),
+  CONSTRAINT FK_recharge_plan_details FOREIGN KEY (plan_id) REFERENCES recharge_plan_details(plan_id)
+);
+
+//////////
+CREATE TABLE mobile_recharge (transaction_id INT PRIMARY KEY,operator_id INT NOT NULL,mobile_no VARCHAR(10) NOT NULL,plan_id INT,amount DECIMAL(10, 2) NOT NULL,CONSTRAINT FK_operator_details2 FOREIGN KEY (operator_id) REFERENCES operator_details(operator_id),CONSTRAINT FK_recharge_plan_details FOREIGN KEY (plan_id) REFERENCES recharge_plan_details(plan_id));//////
+
+---------------------------------------
+INSERT INTO operator_details VALUES(101,'VodafoneIdea','VI Limited');
+INSERT INTO operator_details VALUES(102,'BSNL','BSNL INDIA');
+INSERT INTO operator_details VALUES(103,'Jio','Relience');
+
+INSERT INTO mobileno_details VALUES('8698634713',101,'Avadhoot Chavan');
+INSERT INTO mobileno_details VALUES('8329557301',103,'Avadhoot Chavan');
+INSERT INTO mobileno_details VALUES('9420439088',102,'Aarti Chavan');
+INSERT INTO mobileno_details VALUES('7083823113',101,'A A Chavan');
+
+INSERT INTO user_details (full_name,email,mobileno,username,password) VALUES('Avadhoot Chavan','avadhutch50@gmail.com','8698634713','Avadhutch','Avadhut123');
+
+---------------------------------------
+
+select * from user_details;
+select * from operator_details;
+select * from recharge_plan_details;
+select * from mobileno_details;
+select * from mobile_recharge;
+
